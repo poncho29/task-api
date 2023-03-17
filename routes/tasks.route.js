@@ -1,0 +1,36 @@
+const { Router } = require('express');
+
+const router = Router();
+
+const validatorHandler = require('../middlewares/validator.handle');
+const { getAll, create, getOne, update, remove} = require('../controllers/tasks.controller');
+const { createTaskSchema, getTaskSchema, updateTaskSchema } = require('../schemas/task.schema');
+
+router.get('/', getAll)
+
+router.post(
+  '/',
+  validatorHandler(createTaskSchema, 'body'),
+  create
+)
+
+router.get(
+  '/:id',
+  validatorHandler(getTaskSchema, 'params'),
+  getOne
+)
+
+router.put(
+  '/:id',
+  validatorHandler(getTaskSchema, 'params'),
+  validatorHandler(updateTaskSchema, 'body'),
+  update
+)
+
+router.delete(
+  '/:id',
+  validatorHandler(getTaskSchema, 'params'),
+  remove
+)
+
+module.exports = router
