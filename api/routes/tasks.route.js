@@ -1,10 +1,10 @@
 const { Router } = require('express');
 
-const router = Router();
-
 const validatorHandler = require('../middlewares/validator.handle');
 const { getAll, create, getOne, update, remove} = require('../controllers/tasks.controller');
 const { createTaskSchema, getTaskSchema, updateTaskSchema } = require('../schemas/task.schema');
+
+const router = Router();
 
 router.get('/', getAll)
 

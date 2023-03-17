@@ -1,11 +1,10 @@
-const boom = require('@hapi/boom');
+// const boom = require('@hapi/boom');
 
 const getAll = async (req, res, next) => {
   try {
     res.status(200).json({
-      msg: 'ok',
-      users: []
-    });
+      msg: 'ok'
+    })
   } catch (error) {
     next(error);
   }
@@ -13,10 +12,12 @@ const getAll = async (req, res, next) => {
 
 const create = async (req, res, next) => {
   try {
+    const { body } = req.body;
+
     res.status(200).json({
       msg: 'ok',
-      user: req.body
-    });
+      user: body
+    })
   } catch (error) {
     next(error);
   }
@@ -25,14 +26,11 @@ const create = async (req, res, next) => {
 const getOne = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { body } = req.body;
-
-    if (!id) throw boom.notFound('task not found');
 
     res.status(200).json({
       msg: 'ok',
-      user: body
-    });
+      user: id
+    })
   } catch (error) {
     next(error);
   }
@@ -41,14 +39,11 @@ const getOne = async (req, res, next) => {
 const update = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { body } = req.body;
-
-    if (!id) throw boom.notFound('task not found')
 
     res.status(200).json({
       msg: 'ok',
-      user: body
-    });
+      user: id
+    })
   } catch (error) {
     next(error);
   }
@@ -58,12 +53,10 @@ const remove = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    if (!id) throw boom.notFound('task not found');
-
     res.status(200).json({
       msg: 'ok',
       id
-    });
+    })
   } catch (error) {
     next(error);
   }
