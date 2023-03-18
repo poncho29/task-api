@@ -1,9 +1,13 @@
-// const boom = require('@hapi/boom');
+const boom = require('@hapi/boom');
+const { models } = require('../libs/sequelize');
 
 const getAll = async (req, res, next) => {
   try {
+    const users = await models.User.findAll();
+
     res.status(200).json({
-      msg: 'ok'
+      msg: 'ok',
+      users
     })
   } catch (error) {
     next(error);
@@ -12,11 +16,13 @@ const getAll = async (req, res, next) => {
 
 const create = async (req, res, next) => {
   try {
-    const { body } = req.body;
+    const { body } = req;
+
+    const newUser = await models.User.create(body)
 
     res.status(200).json({
       msg: 'ok',
-      user: body
+      user: newUser
     })
   } catch (error) {
     next(error);
@@ -26,6 +32,10 @@ const create = async (req, res, next) => {
 const getOne = async (req, res, next) => {
   try {
     const { id } = req.params;
+
+    const user = await models.User.findByPk(id);
+
+    if (!user) throw boom.notFound('User not found');
 
     res.status(200).json({
       msg: 'ok',
@@ -38,11 +48,18 @@ const getOne = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
+    const { body } =  req;
     const { id } = req.params;
+
+    const user = await models.User.findByPk(id);
+
+    if (!user) throw boom.notFound('User not found');
+
+    const uptUser = await user.update(body)
 
     res.status(200).json({
       msg: 'ok',
-      user: id
+      user: uptUser
     })
   } catch (error) {
     next(error);
@@ -52,6 +69,12 @@ const update = async (req, res, next) => {
 const remove = async (req, res, next) => {
   try {
     const { id } = req.params;
+
+    const user = await models.User.findByPk(id);
+
+    if (!user) throw boom.notFound('User not found');
+
+    await user.destroy();
 
     res.status(200).json({
       msg: 'ok',

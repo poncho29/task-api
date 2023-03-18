@@ -1,10 +1,13 @@
 const boom = require('@hapi/boom');
+const { models } = require('../libs/sequelize');
 
 const getAll = async (req, res, next) => {
   try {
+    const tasks = await models.Task.findAll();
+
     res.status(200).json({
       msg: 'ok',
-      users: []
+      tasks
     });
   } catch (error) {
     next(error);
@@ -13,9 +16,13 @@ const getAll = async (req, res, next) => {
 
 const create = async (req, res, next) => {
   try {
+    const { body } = req;
+
+    const newTask =  await models.Task.create(body);
+
     res.status(200).json({
       msg: 'ok',
-      user: req.body
+      task: newTask
     });
   } catch (error) {
     next(error);
@@ -25,13 +32,14 @@ const create = async (req, res, next) => {
 const getOne = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { body } = req.body;
 
-    if (!id) throw boom.notFound('task not found');
+    const task = await models.Task.findByPk(id);
+
+    if (!task) throw boom.notFound('Task not found');
 
     res.status(200).json({
       msg: 'ok',
-      user: body
+      task: task
     });
   } catch (error) {
     next(error);
@@ -40,14 +48,18 @@ const getOne = async (req, res, next) => {
 
 const update = async (req, res, next) => {
   try {
+    const { body } = req;
     const { id } = req.params;
-    const { body } = req.body;
 
-    if (!id) throw boom.notFound('task not found')
+    const task = await models.Task.findByPk(id);
+
+    if (!task) throw boom.notFound('Task not found');
+
+    const uptTask =  await task.update(body);
 
     res.status(200).json({
       msg: 'ok',
-      user: body
+      task: uptTask
     });
   } catch (error) {
     next(error);
@@ -58,7 +70,11 @@ const remove = async (req, res, next) => {
   try {
     const { id } = req.params;
 
-    if (!id) throw boom.notFound('task not found');
+    const task = await models.Task.findByPk(id);
+
+    if (!task) throw boom.notFound('Task not found');
+
+    await task.destroy()
 
     res.status(200).json({
       msg: 'ok',
