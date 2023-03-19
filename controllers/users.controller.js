@@ -1,4 +1,6 @@
 const boom = require('@hapi/boom');
+const bcrypt = require('bcrypt');
+
 const { models } = require('../libs/sequelize');
 
 const getAll = async (req, res, next) => {
@@ -18,7 +20,14 @@ const create = async (req, res, next) => {
   try {
     const { body } = req;
 
-    const newUser = await models.User.create(body)
+    const hash = await bcrypt.hash(body.password, 10);
+
+    const newUser = await models.User.create({
+      ...body,
+      password: hash
+    })
+
+    delete newUser.dataValues.password;
 
     res.status(200).json({
       msg: 'ok',
