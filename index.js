@@ -31,7 +31,7 @@ const options = {
 app.use(cors(options))
 
 // Routes
-app.get('/api/', (req, res) => {
+app.get('/', (req, res) => {
   res.send('Task Manager - API REST')
 })
 
