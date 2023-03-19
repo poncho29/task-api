@@ -4,6 +4,8 @@ const cors = require('cors');
 
 const routerApi = require('./routes');
 
+const { checkApiKey } = require('./middlewares/auth.handler');
+
 const {
   logErrors,
   errorHandler,
@@ -31,7 +33,7 @@ const options = {
 app.use(cors(options))
 
 // Routes
-app.get('/', (req, res) => {
+app.get('/', checkApiKey, (req, res) => {
   res.send('Task Manager - API REST')
 })
 
