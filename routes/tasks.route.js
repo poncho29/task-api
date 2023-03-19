@@ -1,3 +1,4 @@
+const passport = require('passport');
 const { Router } = require('express');
 
 const validatorHandler = require('../middlewares/validator.handle');
@@ -8,24 +9,28 @@ const router = Router();
 
 router.get(
   '/',
+  passport.authenticate('jwt', {session: false}),
   validatorHandler(queryTaskSchema, 'params'),
   getAll
 )
 
 router.post(
   '/',
+  passport.authenticate('jwt', {session: false}),
   validatorHandler(createTaskSchema, 'body'),
   create
 )
 
 router.get(
   '/:id',
+  passport.authenticate('jwt', {session: false}),
   validatorHandler(getTaskSchema, 'params'),
   getOne
 )
 
 router.put(
   '/:id',
+  passport.authenticate('jwt', {session: false}),
   validatorHandler(getTaskSchema, 'params'),
   validatorHandler(updateTaskSchema, 'body'),
   update
@@ -33,6 +38,7 @@ router.put(
 
 router.delete(
   '/:id',
+  passport.authenticate('jwt', {session: false}),
   validatorHandler(getTaskSchema, 'params'),
   remove
 )
