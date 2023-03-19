@@ -39,7 +39,7 @@ const getOne = async (req, res, next) => {
 
     res.status(200).json({
       msg: 'ok',
-      user: id
+      user
     })
   } catch (error) {
     next(error);

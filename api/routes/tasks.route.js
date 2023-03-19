@@ -2,11 +2,15 @@ const { Router } = require('express');
 
 const validatorHandler = require('../middlewares/validator.handle');
 const { getAll, create, getOne, update, remove} = require('../controllers/tasks.controller');
-const { createTaskSchema, getTaskSchema, updateTaskSchema } = require('../schemas/task.schema');
+const { createTaskSchema, getTaskSchema, updateTaskSchema, queryTaskSchema } = require('../schemas/task.schema');
 
 const router = Router();
 
-router.get('/', getAll)
+router.get(
+  '/',
+  validatorHandler(queryTaskSchema, 'params'),
+  getAll
+)
 
 router.post(
   '/',

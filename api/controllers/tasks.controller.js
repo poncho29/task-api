@@ -3,7 +3,33 @@ const { models } = require('../libs/sequelize');
 
 const getAll = async (req, res, next) => {
   try {
-    const tasks = await models.Task.findAll();
+    const { limit, offset, author, status } = req.query;
+
+    const options = {
+      where: {}
+    };
+
+    if (limit && offset) {
+      options.limit = limit,
+      options.offset = offset
+    }
+
+    if (author) {
+      options.where.userId = author;
+    }
+
+    if (status) {
+      options.where.status = status;
+    }
+
+    if (author && status) {
+      options.where = {
+        userId: author,
+        status
+      }
+    }
+
+    const tasks = await models.Task.findAll(options);
 
     res.status(200).json({
       msg: 'ok',
