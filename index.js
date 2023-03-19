@@ -32,6 +32,9 @@ const options = {
 }
 app.use(cors(options))
 
+// Passport
+require('./utils/auth');
+
 // Routes
 app.get('/', checkApiKey, (req, res) => {
   res.send('Task Manager - API REST')
