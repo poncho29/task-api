@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const boom = require('@hapi/boom');
 const jwt = require('jsonwebtoken');
 
@@ -39,7 +40,7 @@ const sendRecovery = async (req, res, next) => {
     const token = jwt.sign(payload, config.jwtSecret, {expiresIn: '15min'});
     const link = `http://mFrontend.com/recovery?token=${token}`;
 
-    // Save link in db
+    // Save token in db
     await user.update({ recoveryToken: token});
 
     const mail = {
@@ -58,4 +59,28 @@ const sendRecovery = async (req, res, next) => {
   }
 }
 
-module.exports = { login, sendRecovery }
+const changePassword = async (req, res, next) => {
+  try {
+    const { token, newPassword } = req.body;
+
+    const payload = jwt.verify(token, config.jwtSecret);
+
+    const user = await models.User.findByPk(payload.sub);
+
+    if (!user) { throw boom.unauthorized('unauthorized') };
+
+    if (user.recoveryToken !== token) { throw boom.unauthorized('unauthorized') };
+
+    const hash = await bcrypt.hash(newPassword, 10);
+
+    await user.update({ recoveryToken: null, password: hash });
+
+    res.status(200).json({
+      msg: 'password changed'
+    });
+  } catch (error) {
+    next(error)
+  }
+}
+
+module.exports = { login, sendRecovery, changePassword }
