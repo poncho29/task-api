@@ -1,17 +1,19 @@
 const Joi = require('joi');
 
-const email = Joi.string().email();
+// const email = Joi.string().email();
+const username = Joi.string().email();
 const password = Joi.string();
 const token = Joi.string();
 const newPassword = Joi.string();
 
 const loginSchema = Joi.object({
-  email: email.required(),
+  username: username.required(),
   password: password.required()
 })
 
 const recoverySchema = Joi.object({
-  email: email.required()
+  // email: email.required()
+  username: username.required(),
 })
 
 const changePasswordSchema = Joi.object({
